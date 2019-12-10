@@ -43,7 +43,6 @@ public class RocketScript : MonoBehaviour
     void Update()
     {
         slider.value = fuel;
-        Debug.Log("Fuel = " + fuel);
         if(state == State.alive)
         {
             GoUp();
