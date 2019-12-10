@@ -101,8 +101,15 @@ public class RocketScript : MonoBehaviour
                     aS.clip = successSound;
                     aS.Play();
                     successParticle.Play();
-                    StartCoroutine(LoadLevel("Level2", 3));
-                    Debug.Log("Winner");
+                    if(SceneManager.GetActiveScene().buildIndex == SceneManager.sceneCountInBuildSettings - 1)
+                    {
+                        Debug.Log("VICTOIRETAVU");
+                        Time.timeScale = 0;
+                    }
+                    else
+                    {
+                        StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex + 1, 3));
+                    }
                     //Finish
                     break;
                 default:
@@ -110,14 +117,14 @@ public class RocketScript : MonoBehaviour
                     aS.clip = deathSound;
                     aS.Play();
                     deathParticle.Play();
-                    StartCoroutine(LoadLevel("Level1", 3));
+                    StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex, 3));
                     //Death
                     break;
             }
         }
     }
 
-    IEnumerator LoadLevel(string levelName, float delay)
+    IEnumerator LoadLevel(int levelName, float delay)
     {
         yield return new WaitForSeconds(delay);
         SceneManager.LoadScene(levelName, LoadSceneMode.Single);

@@ -25,6 +25,5 @@ public class Mouvement : MonoBehaviour
         if (timer >= 1) forward = false;
         else if (timer <= 0) forward = true;
         transform.position = Vector3.Lerp(originPos, destinationPos,timer);
-       //transform.position = new Vector3(transform.position.x,Mathf.PingPong(Time.time,6.5f )+ 1.5f, transform.position.z);
     }
 }
