@@ -6,31 +6,30 @@ using UnityEngine.SceneManagement;
 
 public class RocketScript : MonoBehaviour
 {
+    private enum State { alive, death, success }
     private bool Qpressed = false;
     private bool Dpressed = false;
     [SerializeField] private float force = 1500;
     [SerializeField] private float rotation = 150;
     private Rigidbody rb;
-    private Transform trsf;
-    private Vector3 originPos;
-    private Vector3 originRot;
 
     private AudioSource aS;
     [SerializeField] private AudioClip thrustSound;
     [SerializeField] private AudioClip successSound;
     [SerializeField] private AudioClip deathSound;
 
-    enum State { alive, death, success}
-    State state = State.alive;
-    // Start is called before the first frame update
-    
+    [SerializeField] private ParticleSystem thrustParticle;
+    [SerializeField] private ParticleSystem successParticle;
+    [SerializeField] private ParticleSystem deathParticle;
+
+
+    private State state = State.alive;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        trsf = GetComponent<Transform>();
         aS = GetComponent<AudioSource>();
-        originPos = transform.position;
-        originRot = transform.rotation.eulerAngles;
+        state = State.alive;
     }
 
     // Update is called once per frame
@@ -43,28 +42,21 @@ public class RocketScript : MonoBehaviour
         }
     }
 
-    
-   private void resetPosition()
-    {
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-        transform.position = originPos;
-        transform.eulerAngles = originRot;
-    }
-
     void GoUp()
     {
+
         if (Input.GetKey(KeyCode.Space))
         {
             if (!aS.isPlaying)
             {
                 aS.Play();
+                thrustParticle.Play();
             }
-            //Debug.Log("Space Held");
             rb.AddRelativeForce(force * Vector3.up * Time.deltaTime);
         }
         else
         {
+            thrustParticle.Stop();
             aS.Stop();
         }
     }
@@ -77,7 +69,7 @@ public class RocketScript : MonoBehaviour
             rb.freezeRotation = true;
             Qpressed = true;
             //Debug.Log("Q Held");
-            trsf.Rotate(rotation * -Vector3.forward * Time.deltaTime);
+            transform.Rotate(rotation * -Vector3.forward * Time.deltaTime);
 
         }
         else if (!Input.GetKey(KeyCode.Q)) Qpressed = false;
@@ -88,7 +80,7 @@ public class RocketScript : MonoBehaviour
             Dpressed = true;
             //Debug.Log("D Held");
 
-            trsf.Rotate(rotation * Vector3.forward * Time.deltaTime);
+            transform.Rotate(rotation * Vector3.forward * Time.deltaTime);
 
         }
         else if (!Input.GetKey(KeyCode.D)) Dpressed = false;
@@ -97,26 +89,31 @@ public class RocketScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        switch (collision.gameObject.tag)
+        if(state == State.alive)
         {
-            case "Safe":
-                //Start
-                break;
-            case "End":
-                state = State.success;
-                aS.clip = successSound;
-                aS.Play();
-                StartCoroutine(LoadLevel("Level2", 3));
-                Debug.Log("Winner");
-                //Finish
-                break;
-            default:
-                state = State.death;
-                aS.clip = deathSound;
-                aS.Play();
-                StartCoroutine(LoadLevel("Level1", 3));
-                //Death
-                break;
+            switch (collision.gameObject.tag)
+            {
+                case "Safe":
+                    //Start
+                    break;
+                case "End":
+                    state = State.success;
+                    aS.clip = successSound;
+                    aS.Play();
+                    successParticle.Play();
+                    StartCoroutine(LoadLevel("Level2", 3));
+                    Debug.Log("Winner");
+                    //Finish
+                    break;
+                default:
+                    state = State.death;
+                    aS.clip = deathSound;
+                    aS.Play();
+                    deathParticle.Play();
+                    StartCoroutine(LoadLevel("Level1", 3));
+                    //Death
+                    break;
+            }
         }
     }
 
