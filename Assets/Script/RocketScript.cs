@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 
 public class RocketScript : MonoBehaviour
@@ -11,6 +12,8 @@ public class RocketScript : MonoBehaviour
     private bool Dpressed = false;
     [SerializeField] private float force = 1500;
     [SerializeField] private float rotation = 150;
+    [SerializeField] private float fuel = 100;
+
     private Rigidbody rb;
 
     private AudioSource aS;
@@ -24,17 +27,23 @@ public class RocketScript : MonoBehaviour
 
 
     private State state = State.alive;
+    private float consommationFuel = 20;
+
+    private Slider slider;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         aS = GetComponent<AudioSource>();
         state = State.alive;
+        slider = GameObject.Find("Canvas").GetComponentInChildren<Slider>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        slider.value = fuel;
+        Debug.Log("Fuel = " + fuel);
         if(state == State.alive)
         {
             GoUp();
@@ -45,7 +54,7 @@ public class RocketScript : MonoBehaviour
     void GoUp()
     {
 
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space)&& fuel > 0)
         {
             if (!aS.isPlaying)
             {
@@ -53,6 +62,7 @@ public class RocketScript : MonoBehaviour
                 thrustParticle.Play();
             }
             rb.AddRelativeForce(force * Vector3.up * Time.deltaTime);
+            fuel -= consommationFuel * Time.deltaTime;
         }
         else
         {
@@ -85,6 +95,15 @@ public class RocketScript : MonoBehaviour
         }
         else if (!Input.GetKey(KeyCode.D)) Dpressed = false;
         rb.freezeRotation = false;
+    }
+
+    private void OnTriggerEnter(Collider collision)
+    {
+        if(collision.tag == "Fuel")
+        {
+            fuel = Mathf.Clamp(fuel + 50, 0, 100);
+            Destroy(collision.gameObject);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)

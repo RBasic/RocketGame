@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Safe
   - End
+  - Fuel
   layers:
   - Default
   - TransparentFX
