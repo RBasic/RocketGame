@@ -1270,12 +1270,12 @@ PrefabInstance:
     - target: {fileID: 1812050684887648901, guid: efe8182f0dc7f7c44abac7b84f779d06,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.08
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1812050684887648901, guid: efe8182f0dc7f7c44abac7b84f779d06,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1812050684887648901, guid: efe8182f0dc7f7c44abac7b84f779d06,
         type: 3}
@@ -1326,6 +1326,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Cube (12)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5354140436791697730, guid: efe8182f0dc7f7c44abac7b84f779d06,
+        type: 3}
+      propertyPath: speed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5354140436791697730, guid: efe8182f0dc7f7c44abac7b84f779d06,
+        type: 3}
+      propertyPath: movementVector.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5354140436791697730, guid: efe8182f0dc7f7c44abac7b84f779d06,
+        type: 3}
+      propertyPath: destinationPos.y
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: efe8182f0dc7f7c44abac7b84f779d06, type: 3}
